@@ -1,7 +1,7 @@
 import random
 
 ###############################################################################
-#                                    Senha                                    #
+#                                    Palíndromo                              #
 ###############################################################################
 
 
@@ -77,7 +77,6 @@ def funcao_objetivo_pop_palindromo(populacao):
 
     Args:
       populacao: lista contendo os individuos do problema
-      senha_verdadeira: a senha que você está tentando descobrir
 
     """
     fitness = []
@@ -126,43 +125,84 @@ def selecao_torneio_min(populacao, fitness, tamanho_torneio):
 #                                  Cruzamento                                 #
 ###############################################################################
 
-def cruzamento_uniforme(pai, mae, chance_de_cruzamento):
-    """Realiza cruzamento uniforme
-    Args:
-      pai: lista representando um individuo
-      mae: lista representando um individuo
-      chance_de_cruzamento: float entre 0 e 1 representando a chance de cruzamento
-    """
-    if random.random() < chance_de_cruzamento:
-        filho1 = []
-        filho2 = []
-        
-        parte_da_mae = mae
-        parte_do_pai = pai
-        
-        if pai > mae:
-            parte_do_pai = pai[:len(mae)]
-        elif mae > pai:
-            parte_da_mae = mae[:len(pai)]
-           
+def cruzamento_uniforme_com_vogal(pai, mae, chance_de_cruzamento):
+    vogais = {"a", "e", "i", "o", "u"}
 
-        for gene_pai, gene_mae in zip(parte_do_pai, parte_da_mae):
+    if random.random() >= chance_de_cruzamento:
+        return pai[:], mae[:]
+
+    filho1 = []
+    filho2 = []
+
+    # Contadores para saber se cada filho já tem vogal
+    vogal_filho1 = 0
+    vogal_filho2 = 0
+
+    for gene_pai, gene_mae in zip(pai, mae):
+        pai_eh_vogal = gene_pai.lower() in vogais
+        mae_eh_vogal = gene_mae.lower() in vogais
+
+        # Caso ambos genes sejam vogais: distribui normalmente (sorteio)
+        if pai_eh_vogal and mae_eh_vogal:
             if random.choice([True, False]):
                 filho1.append(gene_pai)
                 filho2.append(gene_mae)
             else:
                 filho1.append(gene_mae)
                 filho2.append(gene_pai)
-                      
-        if pai > mae:
-           filho2 += pai[len(mae):]
-        elif mae > pai:
-            filho2 += mae[len(pai):]
 
-        return filho1, filho2
-    else:
-        return pai, mae
+            vogal_filho1 += 1
+            vogal_filho2 += 1
 
+        # Se só o pai tem vogal
+        elif pai_eh_vogal and not mae_eh_vogal:
+            # Se filho1 ainda não tem vogal, ele recebe a vogal do pai
+            if vogal_filho1 == 0:
+                filho1.append(gene_pai)
+                filho2.append(gene_mae)
+                vogal_filho1 += 1
+            # Caso contrário filho2 recebe a vogal, filho1 o outro gene
+            elif vogal_filho2 == 0:
+                filho1.append(gene_mae)
+                filho2.append(gene_pai)
+                vogal_filho2 += 1
+            else:
+                # Ambos tem vogal, pode distribuir aleatoriamente
+                if random.choice([True, False]):
+                    filho1.append(gene_pai)
+                    filho2.append(gene_mae)
+                else:
+                    filho1.append(gene_mae)
+                    filho2.append(gene_pai)
+
+        # Se só a mãe tem vogal (mesma lógica)
+        elif mae_eh_vogal and not pai_eh_vogal:
+            if vogal_filho1 == 0:
+                filho1.append(gene_mae)
+                filho2.append(gene_pai)
+                vogal_filho1 += 1
+            elif vogal_filho2 == 0:
+                filho1.append(gene_pai)
+                filho2.append(gene_mae)
+                vogal_filho2 += 1
+            else:
+                if random.choice([True, False]):
+                    filho1.append(gene_pai)
+                    filho2.append(gene_mae)
+                else:
+                    filho1.append(gene_mae)
+                    filho2.append(gene_pai)
+
+        # Nenhum gene é vogal, troca normal
+        else:
+            if random.choice([True, False]):
+                filho1.append(gene_pai)
+                filho2.append(gene_mae)
+            else:
+                filho1.append(gene_mae)
+                filho2.append(gene_pai)
+
+    return filho1, filho2
 
 
 ###############################################################################
@@ -171,132 +211,84 @@ def cruzamento_uniforme(pai, mae, chance_de_cruzamento):
 
 
 def mutacao_salto(populacao, chance_de_mutacao, valores_possiveis):
-    """Realiza mutação de salto
+    """Realiza mutação de salto, garantindo ao menos uma vogal por indivíduo.
 
     Args:
       populacao: lista contendo os indivíduos do problema
       chance_de_mutacao: float entre 0 e 1 representando a chance de mutação
       valores_possiveis: lista com todos os valores possíveis dos genes
-
     """
+    vogais = {"a", "e", "i", "o", "u"}
+
     for individuo in populacao:
         if random.random() < chance_de_mutacao:
-            if len(individuo) > 1:
-                gene = random.randint(0, len(individuo) -1)
-            else: 
-                gene = 0
-            valor_gene = individuo[gene]
-            indice_letra = valores_possiveis.index(valor_gene)
-            indice_letra += random.choice([1, -1])
-            indice_letra %= len(valores_possiveis)
-            individuo[gene] = valores_possiveis[indice_letra]
+            # Contar vogais no indivíduo
+            indices_vogais = [i for i, letra in enumerate(individuo) if letra.lower() in vogais]
             
             
-def mutacao_insecao_delecao(populacao, chance_de_mutacao, valores_possiveis):
-    """Realiza mutação de salto
-
-    Args:
-      populacao: lista contendo os indivíduos do problema
-      chance_de_mutacao: float entre 0 e 1 representando a chance de mutação
-      valores_possiveis: lista com todos os valores possíveis dos genes
-
-    """
-    for individuo in populacao:
-        if random.random() < chance_de_mutacao:
-            if random.choice([True, False]):
-                individuo.append(random.choice(valores_possiveis))
-            else:
-                if len(individuo) > 1:
-                    individuo.pop(random.randint(0, len(individuo) - 1))
-
-def mutacao_simples(populacao, chance_de_mutacao, valores_possiveis):
-    """Realiza mutação simples
-
-    Args:
-      populacao: lista contendo os indivíduos do problema
-      chance_de_mutacao: float entre 0 e 1 representando a chance de mutação
-      valores_possiveis: lista com todos os valores possíveis dos genes
-
-    """
-    for individuo in populacao:
-        if random.random() < chance_de_mutacao:
-            if len(individuo) > 1:
-                gene = random.randint(0, len(individuo) -1)
-            else: 
-                gene = 0
-            valor_gene = individuo[gene]
-            valores_sorteio = set(valores_possiveis) - set([valor_gene])
-            individuo[gene] = random.choice(list(valores_sorteio))
-
-
-            
-
-
-def mutacao_simples_cb(populacao, chance_de_mutacao):
-    """Realiza mutação simples no problema das caixas binárias
-
-    Args:
-      populacao: lista contendo os indivíduos do problema
-      chance_de_mutacao: float entre 0 e 1 representando a chance de mutação
-
-    """
-    for individuo in populacao:
-        if random.random() < chance_de_mutacao:
-            gene = random.randint(0, len(individuo) - 1)
-            individuo[gene] = 0 if individuo[gene] == 1 else 1
-
-
-def mutacao_sucessiva_cb(populacao, chance_de_mutacao, chance_mutacao_gene):
-    """Realiza mutação simples no problema das caixas binárias
-
-    Args:
-      populacao: lista contendo os indivíduos do problema
-      chance_de_mutacao: float entre 0 e 1 representando a chance de mutação
-      chance_mutacao_gene: float entre 0 e 1 representando a chance de mutação de cada gene
-
-    """
-    for individuo in populacao:
-        if random.random() < chance_de_mutacao:
-            for gene in range(len(individuo)):
-                if random.random() < chance_mutacao_gene:
-                    individuo[gene] = 0 if individuo[gene] == 1 else 1
-
-
-def mutacao_simples_cnb(populacao, chance_de_mutacao, valor_max):
-    """Realiza mutação simples no problema das caixas não-binárias
-
-    Args:
-      populacao: lista contendo os indivíduos do problema
-      chance_de_mutacao: float entre 0 e 1 representando a chance de mutação
-      valor_max: inteiro represtando o valor máximo das caixas
-
-    """
-    for individuo in populacao:
-        if random.random() < chance_de_mutacao:
-            gene = random.randint(0, len(individuo) - 1)
-            valor_gene = individuo[gene]
-            valores_possiveis = list(range(valor_max + 1))
-            valores_possiveis.remove(valor_gene)
-            individuo[gene] = random.choice(valores_possiveis)
-
-
-def mutacao_sucessiva_cnb(
-    populacao, chance_de_mutacao, chance_mutacao_gene, valor_max
-):
-    """Realiza mutação simples no problema das caixas não-binárias
-
-    Args:
-      populacao: lista contendo os indivíduos do problema
-      chance_de_mutacao: float entre 0 e 1 representando a chance de mutação
-      chance_mutacao_gene: float entre 0 e 1 representando a chance de mutação de cada gene
-      valor_max: inteiro represtando o valor máximo das caixas
-
-    """
-    for individuo in populacao:
-        if random.random() < chance_de_mutacao:
-            for gene in range(len(individuo)):
-                if random.random() < chance_mutacao_gene:
-                    valores_possiveis = list(range(valor_max + 1))
+            tentativas = 0
+            while True:
+                    gene = random.randint(0, len(individuo) - 1)
+                    
+                    # Se há apenas uma vogal e o gene sorteado é ela, rejeita
+                    if len(indices_vogais) == 1 and gene == indices_vogais[0]:
+                        tentativas += 1
+                        if tentativas > 100:
+                            break  # evita loop infinito
+                        continue
+                    
+                    # Realiza o salto
                     valor_gene = individuo[gene]
-                    valores_possiveis.remove(valor_gene)
-                    individuo[gene] = random.choice(valores_possiveis)
+                    indice_letra = valores_possiveis.index(valor_gene)
+                    indice_letra += random.choice([1, -1])
+                    indice_letra %= len(valores_possiveis)
+                    
+                    nova_letra = valores_possiveis[indice_letra]
+
+                    # Verifica se após a troca, ainda há ao menos uma vogal
+                    if len(indices_vogais) > 1 or nova_letra.lower() in vogais:
+                        individuo[gene] = nova_letra
+                        break
+        
+
+            
+def mutacao_simples(populacao, chance_de_mutacao, valores_possiveis):
+    """Realiza mutação simples no problema do palíndromo, evitando que, se existe apenas uma vogal, ela seja mutada.
+
+    Args:
+      populacao: lista contendo os indivíduos do problema
+      chance_de_mutacao: float entre 0 e 1 representando a chance de mutação
+      valores_possiveis: lista com todos os valores possíveis dos genes
+    """
+
+    vogais = {"a", "e", "i", "o", "u"}
+
+    for individuo in populacao:
+        if random.random() < chance_de_mutacao:
+            indices_vogais = [i for i, letra in enumerate(individuo) if letra.lower() in vogais]
+
+            tentativas = 0
+            while True:
+                gene = random.randint(0, len(individuo) - 1)
+
+                # Se há apenas uma vogal e o gene sorteado é ela, rejeita
+                if len(indices_vogais) == 1 and gene == indices_vogais[0]:
+                    tentativas += 1
+                    if tentativas > 10:
+                        break  # evita loop infinito
+                    continue
+
+                # Realiza a mutação
+                valor_gene = individuo[gene]
+                valores_sorteio = set(valores_possiveis) - set([valor_gene])
+                nova_letra = random.choice(list(valores_sorteio))
+
+                # Verifica se após a troca, ainda há ao menos uma vogal
+                if len(indices_vogais) > 1 or nova_letra.lower() in vogais:
+                    individuo[gene] = nova_letra
+                    break
+
+        
+
+            
+

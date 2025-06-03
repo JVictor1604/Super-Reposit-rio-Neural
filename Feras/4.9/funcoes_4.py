@@ -291,7 +291,7 @@ def mutacao_insecao_delecao(populacao, chance_de_mutacao, valores_possiveis):
                 individuo.append(random.choice(valores_possiveis))
             else:
                 if len(individuo) > 1:
-                    individuo.pop(random.randint(0, len(individuo) - 1))
+                    individuo.pop()
 
 def mutacao_simples(populacao, chance_de_mutacao, valores_possiveis):
     """Realiza mutação simples

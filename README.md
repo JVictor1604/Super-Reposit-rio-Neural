@@ -10,7 +10,6 @@ Este repositório contém todas as atividades desenvolvidas na disciplina de **R
 **Colaboradores**  
 - Lucas Nascimento da Silva  
 - Marco Túlio Lima Rodrigues  
-- Ana Luiza Poletto Loss
 
 **Professor Responsável**  
 - Dr. Daniel Roberto Cassar

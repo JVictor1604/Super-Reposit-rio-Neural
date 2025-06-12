@@ -23,7 +23,7 @@ def cria_candidato_liga(Elementos_Possiveis, tamanho_liga, limite=100, Valor_min
     peso_total = 0
 
     for i in range(tamanho_liga - 1):
-        restante = limite - peso_total - (Valor_minimo * (tamanho-liga - i - 1))
+        restante = limite - peso_total - (Valor_minimo * (tamanho_liga - i - 1))
         peso = random.randint(Valor_minimo, restante)
         pesos.append(peso)
         peso_total += peso
@@ -145,57 +145,6 @@ def selecao_torneio_max(populacao, fitness, tamanho_torneio):
     return selecionados
 
            
-     
-
-def mutacao_elementos_liga(populacao, chance_de_mutacao, elementos_possiveis):
-    '''
-        Realiza uma mutação nos elementos de indivíduos em uma população de ligas.
-
-
-        Args:
-          populacao: lista de indivíduos, onde cada indivíduo é um dicionário contendo elementos da liga e seus respectivos pesos e valores.
-          chance_de_mutacao: probabilidade (float entre 0 e 1) de que cada indivíduo da população sofra mutação.
-          elementos_possiveis: Dicionário contendo os possíveis elementos a serem usados e o valor associado a cada um deles.
-    '''
-    for individuo in populacao:
-        if random.random() < chance_de_mutacao:
-            elementos = list(individuo.keys())
-            elementos_possiveis_lista = list(elementos_possiveis.keys())
-            elemento_mutado = random.sample(elementos,1)[0]
-            elemento_novo = random.sample(elementos_possiveis_lista,1)[0]
-            individuo[elemento_novo] = individuo.pop(elemento_mutado)
-            individuo[elemento_novo]["Valor"] =  elementos_possiveis[elemento_novo]* individuo[elemento_novo]["Peso"]                       
-
-def mutacao_pesos_liga(populacao, chance_de_mutacao):
-    '''
-        Realiza uma mutação nos pesos dos elementos de indivíduos em uma população de ligas.
-
-
-        Args:
-          populacao: lista de indivíduos, onde cada indivíduo é um dicionário contendo elementos da liga e seus respectivos pesos e valores.
-          chance_de_mutacao: probabilidade (float entre 0 e 1) de que cada indivíduo da população sofra mutação.
-    '''
-    for individuo in populacao:
-        if random.random() < chance_de_mutacao:
-            elementos = list(individuo.keys())
- 
-            elementos_usados = random.sample(elementos, 2)
-
-            elemento_1 = elementos_usados[0]
-            elemento_2 = elementos_usados[1]
-
-            while individuo[elemento_1]["Peso"] < 10:
-                elementos_usados = random.sample(elementos, 2)
-
-                elemento_1 = elementos_usados[0]
-                elemento_2 = elementos_usados[1]
- 
-            peso_removido = random.randint(1,5)
- 
-            individuo[elemento_1]["Peso"] = individuo[elemento_1]["Peso"] - peso_removido
-            individuo[elemento_2]["Peso"] = individuo[elemento_2]["Peso"] + peso_removido                 
-                       
-                       
 def cruzamento_uniforme_dicionario(pai, mae, chance_de_cruzamento, elementos_possiveis):
     '''
         Realiza o cruzamento uniforme entre dois indivíduos representados por dicionários de elementos.
@@ -254,3 +203,57 @@ def cruzamento_uniforme_dicionario(pai, mae, chance_de_cruzamento, elementos_pos
         return filho1, filho2
     else:
         return pai.copy(), mae.copy()
+    
+    
+    
+def mutacao_elementos_liga(populacao, chance_de_mutacao, elementos_possiveis):
+    '''
+        Realiza uma mutação nos elementos de indivíduos em uma população de ligas.
+
+
+        Args:
+          populacao: lista de indivíduos, onde cada indivíduo é um dicionário contendo elementos da liga e seus respectivos pesos e valores.
+          chance_de_mutacao: probabilidade (float entre 0 e 1) de que cada indivíduo da população sofra mutação.
+          elementos_possiveis: Dicionário contendo os possíveis elementos a serem usados e o valor associado a cada um deles.
+    '''
+    for individuo in populacao:
+        if random.random() < chance_de_mutacao:
+            elementos = list(individuo.keys())
+            elementos_possiveis_lista = list(elementos_possiveis.keys())
+            elemento_mutado = random.sample(elementos,1)[0]
+            elemento_novo = random.sample(elementos_possiveis_lista,1)[0]
+            individuo[elemento_novo] = individuo.pop(elemento_mutado)
+            individuo[elemento_novo]["Valor"] =  elementos_possiveis[elemento_novo]* individuo[elemento_novo]["Peso"]                       
+
+def mutacao_pesos_liga(populacao, chance_de_mutacao):
+    '''
+        Realiza uma mutação nos pesos dos elementos de indivíduos em uma população de ligas.
+
+
+        Args:
+          populacao: lista de indivíduos, onde cada indivíduo é um dicionário contendo elementos da liga e seus respectivos pesos e valores.
+          chance_de_mutacao: probabilidade (float entre 0 e 1) de que cada indivíduo da população sofra mutação.
+    '''
+    for individuo in populacao:
+        if random.random() < chance_de_mutacao:
+            elementos = list(individuo.keys())
+            
+            elementos_usados = random.sample(elementos, 2)
+
+            elemento_1 = elementos_usados[0]
+            elemento_2 = elementos_usados[1]
+
+            while individuo[elemento_1]["Peso"] < 10:
+                elementos_usados = random.sample(elementos, 2)
+
+                elemento_1 = elementos_usados[0]
+                elemento_2 = elementos_usados[1]
+ 
+            peso_removido = random.randint(1,5)
+ 
+            individuo[elemento_1]["Peso"] = individuo[elemento_1]["Peso"] - peso_removido
+            individuo[elemento_2]["Peso"] = individuo[elemento_2]["Peso"] + peso_removido    
+            individuo[elemento_1]["Valor"] = individuo[elemento_1]["Peso"] *  elementos_possiveis[elemento_1]
+            individuo[elemento_2]["Valor"] = individuo[elemento_2]["Peso"] *  elementos_possiveis[elemento_2]             
+                       
+                       

@@ -1,6 +1,6 @@
 # 🧠 Memorial da Disciplina de Redes Neurais e Algoritmos Genéticos
 
-Este repositório contém todas as atividades desenvolvidas na disciplina de **Redes Neurais e Algoritmos Genéticos**. O trabalho foi realizado na **Magi, Escola de Encantamentos**.
+Este repositório contém todas as atividades desenvolvidas na disciplina de **Redes Neurais e Algoritmos Genéticos**. O trabalho foi realizado na **Ilum, Escola de Ciência**.
 
 ## 👨‍🎓 Autores
 

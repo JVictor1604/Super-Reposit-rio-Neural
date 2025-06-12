@@ -288,9 +288,9 @@ def mutacao_simples(populacao, chance_de_mutacao, valores_possiveis):
                     individuo[gene] = nova_letra
                     break
 
-        
 
-            
+
+
 
 def migracao(populacoes, num_migrantes):
     NUM_ILHAS = len(populacoes)

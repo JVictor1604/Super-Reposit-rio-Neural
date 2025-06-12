@@ -1,6 +1,6 @@
 # 🧠 Memorial da Disciplina de Redes Neurais e Algoritmos Genéticos
 
-Este repositório contém todas as atividades desenvolvidas na disciplina de **Redes Neurais e Algoritmos Genéticos**. O trabalho foi realizado na **Magi, Escola de Encantamentos**.
+Este repositório contém todas as atividades desenvolvidas na disciplina de **Redes Neurais e Algoritmos Genéticos**. O trabalho foi realizado na **Ilum, Escola de Ciência**.
 
 ## 👨‍🎓 Autores
 
@@ -10,7 +10,6 @@ Este repositório contém todas as atividades desenvolvidas na disciplina de **R
 **Colaboradores**  
 - Lucas Nascimento da Silva  
 - Marco Túlio Lima Rodrigues  
-- Ana Luiza Poletto Loss
 
 **Professor Responsável**  
 - Dr. Daniel Roberto Cassar
@@ -35,12 +34,9 @@ Para executar os projetos:
 - **Fera 4.1 e 4.9** (com *Lucas Nascimento da Silva*):  
   Desenvolvimento colaborativo, com ambos discutindo e implementando a lógica e o código.
 
-- **Fera 4.12** (com *Ana Luiza Poletto Loss*):  
-  Funções pensadas em conjunto; a implementação foi feita em revezamento usando um único computador.
-
 - **Fera 4.13** (com *Marco Túlio Lima Rodrigues*):  
   A função objetivo e a geração de candidatos foram desenvolvidas em parceria. As funções de mutação e cruzamento foram divididas de forma igualitária.
 
 ## 🙏 Agradecimentos
 
-Agradeço aos meus colegas **Lucas Nascimento da Silva**, **Marco Túlio Lima Rodrigues** e **Ana Luiza Poletto Loss**, que contribuíram significativamente para a realização e o aprendizado de diversas atividades e conceitos ao longo desta disciplina.
+Agradeço aos meus colegas **Lucas Nascimento da Silva** e **Marco Túlio Lima Rodrigues** , que contribuíram significativamente para a realização e o aprendizado de diversas atividades e conceitos ao longo desta disciplina.
